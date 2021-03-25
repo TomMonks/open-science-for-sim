@@ -10,12 +10,17 @@ For example, for more simulation examples along with other data science content 
 * Python for healthcare: https://pythonhealthcare.org/
 ```
 
+## Citation
+
 ```{note}
 
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.4637670.svg)](https://doi.org/10.5281/zenodo.4637670)
 
 If you use this guide then we would appreciate a citation in your work.  Please use the following reference:
 
+```
+
+```
 @software{open_science_sim,
   author       = {Thomas Monks},
   title        = {TomMonks/open-science-for-sim: v0.1.0},
@@ -26,5 +31,4 @@ If you use this guide then we would appreciate a citation in your work.  Please 
   doi          = {10.5281/zenodo.4637670},
   url          = {https://doi.org/10.5281/zenodo.4637670}
 }
-
 ```
