@@ -12,6 +12,7 @@
   - file: src/notebooks/02_tools/02_docker
   - file: src/notebooks/02_tools/03_version_control
   
-
-
+- part: Synthetic Data
+  chapters:
+  - file: src/notebooks/03_data/01_smote
 
