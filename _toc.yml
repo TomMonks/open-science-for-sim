@@ -15,4 +15,9 @@
 - part: Synthetic Data
   chapters:
   - file: src/notebooks/03_data/01_smote
+  
+- part: Documentation
+  chapters:
+  - file: src/notebooks/04_doc/01_jupyter
+  - file: src/notebooks/04_doc/02_jupyterbooks
 
