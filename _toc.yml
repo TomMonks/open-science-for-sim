@@ -1,0 +1,10 @@
+- file: src/front_page
+  numbered: false
+
+- part: FOSS
+  chapters:
+  - file: src/notebooks/01_foss_sim/01_simpy
+  - file: src/notebooks/01_foss_sim/02_ciw
+
+
+
