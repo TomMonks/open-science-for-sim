@@ -6,7 +6,7 @@
   - file: src/notebooks/01_foss_sim/01_simpy
   - file: src/notebooks/01_foss_sim/02_ciw
   
-- part: Essential tools
+- part: Code and software environment
   chapters:
   - file: src/notebooks/02_tools/01_virt_env
   - file: src/notebooks/02_tools/02_docker
@@ -20,4 +20,9 @@
   chapters:
   - file: src/notebooks/04_doc/01_jupyter
   - file: src/notebooks/04_doc/02_jupyterbooks
-
+  
+- part: Deployment
+  chapters:
+  - file: src/notebooks/05_deployment/01_pypi
+  - file: src/notebooks/05_deployment/02_binderhub
+  - file: src/notebooks/05_deployment/03_cloud_notebooks
