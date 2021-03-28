@@ -6,7 +6,7 @@
   - file: src/notebooks/01_foss_sim/01_simpy
   - file: src/notebooks/01_foss_sim/02_ciw
   
-- part: Code and software environment
+- part: Software environment
   chapters:
   - file: src/notebooks/02_tools/01_virt_env
   - file: src/notebooks/02_tools/02_docker
