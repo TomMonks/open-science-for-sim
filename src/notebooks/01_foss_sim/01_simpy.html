@@ -444,7 +444,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;4.0.1&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;3.0.12&#39;
 </pre></div>
 </div>
 </div>
@@ -468,15 +468,31 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;1.19.2&#39;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;1.19.1&#39;
 </pre></div>
 </div>
 </div>
 </div>
 </div>
+<hr class="docutils" />
 <div class="section" id="firsttreatment-a-health-clinic-based-in-the-us">
 <h2>FirstTreatment: A health clinic based in the US.<a class="headerlink" href="#firsttreatment-a-health-clinic-based-in-the-us" title="Permalink to this headline">¶</a></h2>
-<p>This example is based on exercise 13 from Nelson (2010) page 170.</p>
+<p><strong>This example is based on exercise 13 from Nelson (2013) page 170.</strong></p>
+<blockquote>
+<div><p><em>Nelson. B.L. (2013). <a class="reference external" href="https://www.amazon.co.uk/Foundations-Methods-Stochastic-Simulation-International/dp/1461461596/ref=sr_1_1?dchild=1&amp;keywords=foundations+and+methods+of+stochastic+simulation&amp;qid=1617050801&amp;sr=8-1">Foundations and methods of stochastic simulation</a>. Springer.</em></p>
+</div></blockquote>
+<p>Patients arrive to the health clinic between 6am and 12am following a non-stationary poisson process. After 12am arriving patients are diverted elsewhere and remaining WIP is completed.  On arrival, all patients quickly sign-in and are <strong>triaged</strong>.</p>
+<p>The health clinic expects two types of patient arrivals:</p>
+<p><strong>Trauma arrivals:</strong></p>
+<ul class="simple">
+<li><p>patients with severe illness and trauma that must first be stablised in a <strong>trauma room</strong>.</p></li>
+<li><p>these patients then undergo <strong>treatment</strong> in a cubicle before being discharged.</p></li>
+</ul>
+<p><strong>Non-trauma arrivals</strong></p>
+<ul class="simple">
+<li><p>patients with minor illness and no trauma go through <strong>registration</strong> and <strong>examination</strong> activities</p></li>
+<li><p>a proportion of non-trauma patients require <strong>treatment</strong> in a cubicle before being dicharged.</p></li>
+</ul>
 <blockquote>
 <div><p>In this model treatment of trauma and non-trauma patients is modelled seperately.</p>
 </div></blockquote>
@@ -510,7 +526,7 @@
 <span class="n">DEFAULT_NON_TRAUMA_TREAT_VAR</span> <span class="o">=</span> <span class="mf">2.0</span>
 
 <span class="c1"># prob patient requires treatment given trauma</span>
-<span class="n">DEFAULT_NON_TRAUMA_TREAT_P</span> <span class="o">=</span> <span class="mf">0.40</span>
+<span class="n">DEFAULT_NON_TRAUMA_TREAT_P</span> <span class="o">=</span> <span class="mf">0.60</span>
 
 <span class="c1"># proportion of patients triaged as trauma</span>
 <span class="n">DEFAULT_PROB_TRAUMA</span> <span class="o">=</span> <span class="mf">0.12</span>
@@ -524,7 +540,8 @@
 <p>The data for arrival rates varies between clinic opening at 6am and closure at 12am.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NSPP_PATH</span> <span class="o">=</span> <span class="s1">&#39;data/ed_arrivals.csv&#39;</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">NSPP_PATH</span> <span class="o">=</span> <span class="s1">&#39;https://raw.githubusercontent.com/TomMonks/&#39;</span> \
+ <span class="o">+</span> <span class="s1">&#39;open-science-for-sim/main/src/notebooks/01_foss_sim/data/ed_arrivals.csv&#39;</span>
 
 <span class="c1"># visualise</span>
 <span class="n">ax</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">NSPP_PATH</span><span class="p">)</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;arrival_rate&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;period&#39;</span><span class="p">,</span> <span class="n">rot</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span>
@@ -1230,7 +1247,7 @@
 </div>
 <div class="section" id="main-model-class">
 <h2>Main model class<a class="headerlink" href="#main-model-class" title="Permalink to this headline">¶</a></h2>
-<p>The main class that a user interacts with to run the model is <code class="docutils literal notranslate"><span class="pre">TreatmentCentreModel</span></code>.  This implements a <code class="docutils literal notranslate"><span class="pre">.run()</span></code> method, contains a process for patients arrivals and inits instances of <code class="docutils literal notranslate"><span class="pre">TraumaPathway</span></code> or <code class="docutils literal notranslate"><span class="pre">NonTraumaPathway</span></code> depending on the arrival type.</p>
+<p>The main class that a user interacts with to run the model is <code class="docutils literal notranslate"><span class="pre">TreatmentCentreModel</span></code>.  This implements a <code class="docutils literal notranslate"><span class="pre">.run()</span></code> method, contains a simple algorithm for the non-stationary poission process for patients arrivals and inits instances of <code class="docutils literal notranslate"><span class="pre">TraumaPathway</span></code> or <code class="docutils literal notranslate"><span class="pre">NonTraumaPathway</span></code> depending on the arrival type.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">TreatmentCentreModel</span><span class="p">:</span>
@@ -1733,15 +1750,15 @@
     </tr>
     <tr>
       <th>04a_treatment_wait(non_trauma)</th>
-      <td>33.875299</td>
+      <td>158.281113</td>
     </tr>
     <tr>
       <th>04b_treatment_util(non_trauma)</th>
-      <td>0.800649</td>
+      <td>0.898896</td>
     </tr>
     <tr>
       <th>05_total_time(non-trauma)</th>
-      <td>199.019461</td>
+      <td>244.927536</td>
     </tr>
     <tr>
       <th>06a_trauma_wait</th>
@@ -1765,7 +1782,7 @@
     </tr>
     <tr>
       <th>09_throughput</th>
-      <td>189.000000</td>
+      <td>161.000000</td>
     </tr>
   </tbody>
 </table>
@@ -1799,8 +1816,8 @@
 </div>
 <div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>done.
 
-CPU times: user 1.27 s, sys: 0 ns, total: 1.27 s
-Wall time: 1.27 s
+CPU times: user 2.63 s, sys: 74.1 ms, total: 2.7 s
+Wall time: 6.23 s
 </pre></div>
 </div>
 <div class="output text_html"><div>
@@ -1868,15 +1885,15 @@ Wall time: 1.27 s
       <td>0.854615</td>
       <td>28.478642</td>
       <td>0.847430</td>
-      <td>26.360221</td>
-      <td>0.816698</td>
-      <td>206.996116</td>
+      <td>145.414321</td>
+      <td>0.853189</td>
+      <td>247.872229</td>
       <td>8.595360</td>
       <td>0.368908</td>
       <td>214.198331</td>
       <td>0.976808</td>
       <td>399.200311</td>
-      <td>182.0</td>
+      <td>154.0</td>
     </tr>
     <tr>
       <th>2</th>
@@ -1887,15 +1904,15 @@ Wall time: 1.27 s
       <td>0.749027</td>
       <td>16.328179</td>
       <td>0.795921</td>
-      <td>18.301567</td>
-      <td>0.719462</td>
-      <td>119.174360</td>
+      <td>134.202786</td>
+      <td>0.846795</td>
+      <td>178.799154</td>
       <td>65.146932</td>
       <td>0.838521</td>
       <td>231.603567</td>
       <td>0.778634</td>
       <td>392.064964</td>
-      <td>174.0</td>
+      <td>139.0</td>
     </tr>
     <tr>
       <th>3</th>
@@ -1906,15 +1923,15 @@ Wall time: 1.27 s
       <td>0.839994</td>
       <td>18.400280</td>
       <td>0.847310</td>
-      <td>18.742659</td>
-      <td>0.781948</td>
-      <td>203.812718</td>
+      <td>169.503295</td>
+      <td>0.827088</td>
+      <td>260.804457</td>
       <td>78.130137</td>
       <td>0.816547</td>
       <td>251.835736</td>
       <td>1.188287</td>
       <td>369.276920</td>
-      <td>181.0</td>
+      <td>157.0</td>
     </tr>
   </tbody>
 </table>
@@ -1935,15 +1952,15 @@ Wall time: 1.27 s
 02b_registration_util               0.84
 03a_examination_wait               24.79
 03b_examination_util                0.85
-04a_treatment_wait(non_trauma)     34.68
-04b_treatment_util(non_trauma)      0.79
-05_total_time(non-trauma)         196.87
+04a_treatment_wait(non_trauma)    131.76
+04b_treatment_util(non_trauma)      0.87
+05_total_time(non-trauma)         230.43
 06a_trauma_wait                   135.77
 06b_trauma_util                     0.81
 07a_treatment_wait(trauma)        175.30
 07b_treatment_util(trauma)          0.85
 08_total_time(trauma)             399.90
-09_throughput                     184.36
+09_throughput                     154.66
 dtype: float64
 </pre></div>
 </div>
@@ -2221,27 +2238,27 @@ Scenario analysis complete.
     </tr>
     <tr>
       <th>04a_treatment_wait(non_trauma)</th>
-      <td>28.64</td>
-      <td>32.71</td>
-      <td>41.65</td>
-      <td>0.65</td>
-      <td>41.62</td>
+      <td>137.72</td>
+      <td>139.98</td>
+      <td>151.82</td>
+      <td>2.26</td>
+      <td>152.09</td>
     </tr>
     <tr>
       <th>04b_treatment_util(non_trauma)</th>
-      <td>0.77</td>
-      <td>0.78</td>
-      <td>0.79</td>
-      <td>0.41</td>
-      <td>0.79</td>
+      <td>0.86</td>
+      <td>0.86</td>
+      <td>0.86</td>
+      <td>0.63</td>
+      <td>0.86</td>
     </tr>
     <tr>
       <th>05_total_time(non-trauma)</th>
-      <td>197.20</td>
-      <td>195.27</td>
-      <td>182.98</td>
-      <td>193.06</td>
-      <td>180.50</td>
+      <td>236.01</td>
+      <td>233.77</td>
+      <td>225.60</td>
+      <td>196.38</td>
+      <td>223.33</td>
     </tr>
     <tr>
       <th>06a_trauma_wait</th>
@@ -2285,11 +2302,11 @@ Scenario analysis complete.
     </tr>
     <tr>
       <th>09_throughput</th>
-      <td>183.05</td>
-      <td>183.15</td>
-      <td>191.30</td>
-      <td>185.55</td>
-      <td>190.15</td>
+      <td>152.10</td>
+      <td>152.00</td>
+      <td>157.30</td>
+      <td>184.65</td>
+      <td>155.85</td>
     </tr>
   </tbody>
 </table>
