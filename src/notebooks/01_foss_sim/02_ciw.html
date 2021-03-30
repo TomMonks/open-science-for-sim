@@ -354,6 +354,11 @@
    </li>
   </ul>
  </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#end">
+   End
+  </a>
+ </li>
 </ul>
 
         </nav>
@@ -368,6 +373,10 @@
                 
   <div class="section" id="ciw-county-hospital">
 <h1>CiW: County Hospital<a class="headerlink" href="#ciw-county-hospital" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">ciw</span></code> (pronouced ‘queue’) is a Python library for the simulation of <strong>open queueing networks</strong>. The core features of this library include the capability to simulate networks of queues.</p>
+<blockquote>
+<div><p>This notebook demonstrates the use of <code class="docutils literal notranslate"><span class="pre">ciw</span></code> in the spirit of demonstrating a model code can be released with a paper. The full scope of what is possible in <code class="docutils literal notranslate"><span class="pre">ciw</span></code> is out of scope.  Detailed documentation can be found here: <a class="reference external" href="https://ciw.readthedocs.io">https://ciw.readthedocs.io</a></p>
+</div></blockquote>
 <div class="section" id="imports">
 <h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
 <div class="cell docutils container">
@@ -404,7 +413,8 @@
 <hr class="docutils" />
 <div class="section" id="county-hospital-example">
 <h2>County Hospital Example<a class="headerlink" href="#county-hospital-example" title="Permalink to this headline">¶</a></h2>
-<p>This example is based on <em>the county hospital M/M/s</em> exercise from Hillier and Lieberman (2005) chpt 17, pg 79</p>
+<p>This example is based on <em>the county hospital M/M/s</em> exercise from Hillier and Lieberman (2005) chpt 17, pg 766.</p>
+<p>The emergency department at a <strong>county hospital</strong> is simplified to a M/M/s queue.  Patients arrive at random and queue see be asessed and treated by a doctor.  This code explores the trade-off in waiting time and doctor utilisation.</p>
 <blockquote>
 <div><p><em>Hillier and Lieberman (2005). Introduction to Operations Research. 8th ed. McGrall-Hill International</em></p>
 </div></blockquote>
@@ -986,6 +996,9 @@ Scenario analysis complete.
 </div>
 </div>
 </div>
+</div>
+<div class="section" id="end">
+<h2>End<a class="headerlink" href="#end" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
