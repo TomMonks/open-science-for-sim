@@ -5,7 +5,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CiW &#8212; Open Science for Computer Simulation</title>
+    <title>CiW: County Hospital &#8212; Open Science for Computer Simulation</title>
     
   <link rel="stylesheet" href="../../../_static/css/index.f658d18f9b420779cfdf24aa0a7e2d77.css">
 
@@ -103,7 +103,7 @@
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   CiW
+   CiW: County Hospital
   </a>
  </li>
 </ul>
@@ -282,6 +282,82 @@
         <!-- Table of contents -->
         <div class="d-none d-md-block col-md-2 bd-toc show">
             
+        <div class="tocsection onthispage pt-5 pb-3">
+            <i class="fas fa-list"></i>
+            Contents
+        </div>
+        <nav id="bd-toc-nav">
+            <ul class="nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#imports">
+   Imports
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#county-hospital-example">
+   County Hospital Example
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#parameters">
+     Parameters
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#simulation-config">
+     Simulation config
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#model-parameter-class">
+     Model parameter class
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#ciw-model">
+   CiW Model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#executing-the-model">
+   Executing the model
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#script-to-run-a-single-replication">
+     Script to run a single replication.
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#script-to-run-multiple-replications">
+     Script to run multiple replications
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#visualise-replications">
+     Visualise replications
+    </a>
+   </li>
+  </ul>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scenario-analysis">
+   Scenario Analysis
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#script-to-run-scenario-analysis">
+     Script to run scenario analysis
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+        </nav>
+        
         </div>
     </div>
 </div>
@@ -290,8 +366,627 @@
         
               <div>
                 
-  <div class="section" id="ciw">
-<h1>CiW<a class="headerlink" href="#ciw" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="ciw-county-hospital">
+<h1>CiW: County Hospital<a class="headerlink" href="#ciw-county-hospital" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># pip install the package if using Google Colab</span>
+<span class="c1">#!pip install Ciw==2.1.3</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">ciw</span>
+<span class="n">ciw</span><span class="o">.</span><span class="n">__version__</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&#39;2.1.3&#39;
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<hr class="docutils" />
+<div class="section" id="county-hospital-example">
+<h2>County Hospital Example<a class="headerlink" href="#county-hospital-example" title="Permalink to this headline">¶</a></h2>
+<p>This example is based on <em>the county hospital M/M/s</em> exercise from Hillier and Lieberman (2005) chpt 17, pg 79</p>
+<blockquote>
+<div><p><em>Hillier and Lieberman (2005). Introduction to Operations Research. 8th ed. McGrall-Hill International</em></p>
+</div></blockquote>
+<div class="section" id="parameters">
+<h3>Parameters<a class="headerlink" href="#parameters" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># mean time between arrivals in hours</span>
+<span class="n">DEFAULT_MEAN_IAT</span> <span class="o">=</span> <span class="mf">0.50</span>
+
+<span class="c1"># mean service duration in hours.</span>
+<span class="n">DEFAULT_MEAN_SERVICE</span> <span class="o">=</span> <span class="mf">0.33</span>
+
+<span class="c1"># number of doctors</span>
+<span class="n">DEFAULT_N_DOCTORS</span> <span class="o">=</span> <span class="mi">1</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="simulation-config">
+<h3>Simulation config<a class="headerlink" href="#simulation-config" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># results collection period in hours</span>
+<span class="n">DEFAULT_RC_PERIOD</span> <span class="o">=</span> <span class="mi">24</span> <span class="o">*</span> <span class="mi">5</span>
+
+<span class="c1"># warmup period to exclude in hours.</span>
+<span class="n">WARM_UP_PERIOD</span> <span class="o">=</span> <span class="mi">24</span>
+
+<span class="c1"># number of multiple replications</span>
+<span class="n">DEFAULT_N_REPS</span> <span class="o">=</span> <span class="mi">50</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="model-parameter-class">
+<h3>Model parameter class<a class="headerlink" href="#model-parameter-class" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Scenario</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Container class for simulation parameters</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Initialise the container</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mean_iat</span> <span class="o">=</span> <span class="n">DEFAULT_MEAN_IAT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mean_service</span> <span class="o">=</span> <span class="n">DEFAULT_MEAN_SERVICE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">n_doctors</span> <span class="o">=</span> <span class="n">DEFAULT_N_DOCTORS</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_sampling</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">init_sampling</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Initialise the distributions used in the model</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">arrival_dist</span> <span class="o">=</span> <span class="n">ciw</span><span class="o">.</span><span class="n">dists</span><span class="o">.</span><span class="n">Exponential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mean_iat</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">treatment_dist</span> <span class="o">=</span> <span class="n">ciw</span><span class="o">.</span><span class="n">dists</span><span class="o">.</span><span class="n">Exponential</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mean_service</span><span class="p">)</span>
+        
+        
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="ciw-model">
+<h2>CiW Model<a class="headerlink" href="#ciw-model" title="Permalink to this headline">¶</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_model</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Build a CiW model using the arguments provided.</span>
+<span class="sd">    </span>
+<span class="sd">    Params:</span>
+<span class="sd">    -----</span>
+<span class="sd">    args: Scenario</span>
+<span class="sd">        container class for scenario model arguments.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    ciw.network.Network</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">ciw</span><span class="o">.</span><span class="n">create_network</span><span class="p">(</span><span class="n">arrival_distributions</span><span class="o">=</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">arrival_dist</span><span class="p">],</span>
+                               <span class="n">service_distributions</span><span class="o">=</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">treatment_dist</span><span class="p">],</span>
+                               <span class="n">number_of_servers</span><span class="o">=</span><span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">n_doctors</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">model</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="executing-the-model">
+<h2>Executing the model<a class="headerlink" href="#executing-the-model" title="Permalink to this headline">¶</a></h2>
+<p>We include two functions. <code class="docutils literal notranslate"><span class="pre">single_run()</span></code> and <code class="docutils literal notranslate"><span class="pre">multiple_replications()</span></code>.  The latter is used to repeatedly call and process the results from <code class="docutils literal notranslate"><span class="pre">single_run</span></code>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">processed_run_results</span><span class="p">(</span><span class="n">sim_engine</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Process the results from a single replication</span>
+<span class="sd">    </span>
+<span class="sd">    Params:</span>
+<span class="sd">    ------</span>
+<span class="sd">    engine: ciw simulation </span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    ------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># return records for each patient</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="n">sim_engine</span><span class="o">.</span><span class="n">get_all_records</span><span class="p">()</span>
+    
+    <span class="n">service_time</span> <span class="o">=</span> <span class="n">get_metric_mean</span><span class="p">(</span><span class="s1">&#39;service_time&#39;</span><span class="p">,</span> <span class="n">records</span><span class="p">)</span>
+    <span class="n">waits</span> <span class="o">=</span> <span class="n">get_metric_mean</span><span class="p">(</span><span class="s1">&#39;waiting_time&#39;</span><span class="p">,</span> <span class="n">records</span><span class="p">)</span>
+    <span class="n">service_util</span> <span class="o">=</span> <span class="n">sim_engine</span><span class="o">.</span><span class="n">transitive_nodes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">server_utilisation</span>
+    
+    <span class="n">results</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;00_throughput&#39;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">records</span><span class="p">),</span>
+               <span class="s1">&#39;01_waiting_time&#39;</span><span class="p">:</span> <span class="n">waits</span><span class="p">,</span>
+               <span class="s1">&#39;02_doctor_time&#39;</span><span class="p">:</span> <span class="n">service_time</span><span class="p">,</span>
+               <span class="s1">&#39;03_doctor_util&#39;</span><span class="p">:</span> <span class="n">service_util</span><span class="p">}</span>
+    
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;1&#39;</span><span class="p">:</span><span class="n">results</span><span class="p">})</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rep&#39;</span>
+    <span class="k">return</span> <span class="n">df</span>
+    
+<span class="k">def</span> <span class="nf">get_metric_mean</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="n">records</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate the mean of a metric</span>
+<span class="sd">    </span>
+<span class="sd">    Takes account of warm-up period</span>
+<span class="sd">    </span>
+<span class="sd">    Params:</span>
+<span class="sd">    -----</span>
+<span class="sd">    metric: str</span>
+<span class="sd">        The performance metric of interest e.g. &#39;waiting_time&#39;</span>
+<span class="sd">        </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">getattr</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">metric</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">records</span>
+                    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">arrival_date</span> <span class="o">&gt;</span> <span class="n">WARM_UP_PERIOD</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> 
+    
+    
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">single_run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Conduct a single run of the simulation model.</span>
+<span class="sd">    </span>
+<span class="sd">    Params:</span>
+<span class="sd">    ------</span>
+<span class="sd">    args: Scenario</span>
+<span class="sd">        Parameter container</span>
+<span class="sd">        </span>
+<span class="sd">    random_seed: int</span>
+<span class="sd">        Random seed to control simulation run.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="c1"># random seed</span>
+    <span class="n">ciw</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span>
+
+    <span class="c1"># parameterise model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">get_model</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+    <span class="c1"># simulation engine</span>
+    <span class="n">sim_engine</span> <span class="o">=</span> <span class="n">ciw</span><span class="o">.</span><span class="n">Simulation</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    
+    <span class="c1"># run the model</span>
+    <span class="n">sim_engine</span><span class="o">.</span><span class="n">simulate_until_max_time</span><span class="p">(</span><span class="n">DEFAULT_RC_PERIOD</span><span class="o">+</span><span class="n">WARM_UP_PERIOD</span><span class="p">)</span>
+    
+    <span class="c1"># return processed results for run.</span>
+    <span class="k">return</span> <span class="n">processed_run_results</span><span class="p">(</span><span class="n">sim_engine</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">multiple_replications</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">DEFAULT_N_REPS</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Perform multiple replications of the model.</span>
+<span class="sd">    </span>
+<span class="sd">    Params:</span>
+<span class="sd">    ------</span>
+<span class="sd">    scenario: Scenario</span>
+<span class="sd">        Parameters/arguments to configure the model</span>
+
+<span class="sd">    n_reps: int, optional (default=DEFAULT_N_REPS)</span>
+<span class="sd">        Number of independent replications to run.</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    pandas.DataFrame</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">single_run</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="n">rep</span><span class="p">)</span> <span class="k">for</span> <span class="n">rep</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_reps</span><span class="p">)]</span>
+    
+    <span class="c1"># format and return results in a dataframe</span>
+    <span class="n">df_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">(</span><span class="n">results</span><span class="p">)</span>
+    <span class="n">df_results</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df_results</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">df_results</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;rep&#39;</span>
+    <span class="k">return</span> <span class="n">df_results</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="script-to-run-a-single-replication">
+<h3>Script to run a single replication.<a class="headerlink" href="#script-to-run-a-single-replication" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create scenario and parameterise model</span>
+<span class="n">args</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">()</span>
+<span class="n">single_run</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>rep</th>
+      <th>1</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>00_throughput</th>
+      <td>45.000000</td>
+    </tr>
+    <tr>
+      <th>01_waiting_time</th>
+      <td>38.750818</td>
+    </tr>
+    <tr>
+      <th>02_doctor_time</th>
+      <td>3.282238</td>
+    </tr>
+    <tr>
+      <th>03_doctor_util</th>
+      <td>0.953031</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="script-to-run-multiple-replications">
+<h3>Script to run multiple replications<a class="headerlink" href="#script-to-run-multiple-replications" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">args</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">()</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">multiple_replications</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>00_throughput</th>
+      <th>01_waiting_time</th>
+      <th>02_doctor_time</th>
+      <th>03_doctor_util</th>
+    </tr>
+    <tr>
+      <th>rep</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>33.0</td>
+      <td>38.240624</td>
+      <td>4.098196</td>
+      <td>0.974158</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>49.0</td>
+      <td>21.601901</td>
+      <td>3.050446</td>
+      <td>0.997996</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>29.0</td>
+      <td>62.282375</td>
+      <td>4.231670</td>
+      <td>0.956606</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>42.0</td>
+      <td>21.179496</td>
+      <td>3.466823</td>
+      <td>0.964612</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>43.0</td>
+      <td>41.683234</td>
+      <td>3.167520</td>
+      <td>0.991548</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+</div>
+<div class="section" id="visualise-replications">
+<h3>Visualise replications<a class="headerlink" href="#visualise-replications" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;01_waiting_time&#39;</span><span class="p">]);</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;wait for doctor&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">results</span><span class="p">[</span><span class="s1">&#39;03_doctor_util&#39;</span><span class="p">]);</span>
+<span class="n">ax</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Doctor Utilisation&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/02_ciw_22_0.png" src="../../../_images/02_ciw_22_0.png" />
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="scenario-analysis">
+<h2>Scenario Analysis<a class="headerlink" href="#scenario-analysis" title="Permalink to this headline">¶</a></h2>
+<p>The structured approach we took to organising our <code class="docutils literal notranslate"><span class="pre">ciw</span></code> model allows us to easily experiment with alternative scenarios.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_scenarios</span><span class="p">():</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Creates a dictionary object containing</span>
+<span class="sd">    objects of type `Scenario` to run.</span>
+<span class="sd">    </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    --------</span>
+<span class="sd">    dict</span>
+<span class="sd">        Contains the scenarios for the model</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">scenarios</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">scenarios</span><span class="p">[</span><span class="s1">&#39;base&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">()</span>
+    
+    <span class="c1"># extra doctors</span>
+    <span class="n">max_doctors</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_doctors</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">scenarios</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;doctor+</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Scenario</span><span class="p">()</span>
+        <span class="n">scenarios</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;doctor+</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">n_doctors</span> <span class="o">+=</span> <span class="n">i</span>
+        
+    <span class="k">return</span> <span class="n">scenarios</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">run_scenario_analysis</span><span class="p">(</span><span class="n">scenarios</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">DEFAULT_N_REPS</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Run each of the scenarios for a specified results</span>
+<span class="sd">    collection period and replications.</span>
+<span class="sd">    </span>
+<span class="sd">    Params:</span>
+<span class="sd">    ------</span>
+<span class="sd">    scenarios: dict</span>
+<span class="sd">        dictionary of Scenario objects</span>
+<span class="sd">        </span>
+<span class="sd">    n_rep: int, optional (default=DEFAULT_N_REPS)</span>
+<span class="sd">        Number of replications</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario Analysis&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No. Scenario: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">scenarios</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Replications: </span><span class="si">{</span><span class="n">n_reps</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">scenario_results</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">sc_name</span><span class="p">,</span> <span class="n">scenario</span> <span class="ow">in</span> <span class="n">scenarios</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Running </span><span class="si">{</span><span class="n">sc_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="s1">&#39; =&gt; &#39;</span><span class="p">)</span>
+        <span class="n">replications</span> <span class="o">=</span> <span class="n">multiple_replications</span><span class="p">(</span><span class="n">scenario</span><span class="p">,</span> <span class="n">n_reps</span><span class="o">=</span><span class="n">n_reps</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;done.</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        
+        <span class="c1">#save the results</span>
+        <span class="n">scenario_results</span><span class="p">[</span><span class="n">sc_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">replications</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Scenario analysis complete.&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scenario_results</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="script-to-run-scenario-analysis">
+<h3>Script to run scenario analysis<a class="headerlink" href="#script-to-run-scenario-analysis" title="Permalink to this headline">¶</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#get the scenarios</span>
+<span class="n">scenarios</span> <span class="o">=</span> <span class="n">get_scenarios</span><span class="p">()</span>
+
+<span class="c1">#run the scenario analysis</span>
+<span class="n">scenario_results</span> <span class="o">=</span> <span class="n">run_scenario_analysis</span><span class="p">(</span><span class="n">scenarios</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Scenario Analysis
+No. Scenario: 6
+Replications: 50
+Running base =&gt; done.
+
+Running doctor+1 =&gt; done.
+
+Running doctor+2 =&gt; done.
+
+Running doctor+3 =&gt; done.
+
+Running doctor+4 =&gt; done.
+
+Running doctor+5 =&gt; done.
+
+Scenario analysis complete.
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">scenario_summary_frame</span><span class="p">(</span><span class="n">scenario_results</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Mean results for each performance measure by scenario</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters:</span>
+<span class="sd">    ----------</span>
+<span class="sd">    scenario_results: dict</span>
+<span class="sd">        dictionary of replications.  </span>
+<span class="sd">        Key identifies the performance measure</span>
+<span class="sd">        </span>
+<span class="sd">    Returns:</span>
+<span class="sd">    -------</span>
+<span class="sd">    pd.DataFrame</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">sc_name</span><span class="p">,</span> <span class="n">replications</span> <span class="ow">in</span> <span class="n">scenario_results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">summary</span><span class="p">,</span> <span class="n">replications</span><span class="o">.</span><span class="n">mean</span><span class="p">()],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">columns</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sc_name</span><span class="p">)</span>
+
+    <span class="n">summary</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="n">columns</span>
+    <span class="k">return</span> <span class="n">summary</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># as well as rounding you may want to rename the cols/rows to </span>
+<span class="c1"># more readable alternatives.</span>
+<span class="n">summary_frame</span> <span class="o">=</span> <span class="n">scenario_summary_frame</span><span class="p">(</span><span class="n">scenario_results</span><span class="p">)</span>
+<span class="n">summary_frame</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>base</th>
+      <th>doctor+1</th>
+      <th>doctor+2</th>
+      <th>doctor+3</th>
+      <th>doctor+4</th>
+      <th>doctor+5</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>00_throughput</th>
+      <td>45.34</td>
+      <td>70.38</td>
+      <td>73.66</td>
+      <td>72.64</td>
+      <td>73.04</td>
+      <td>73.00</td>
+    </tr>
+    <tr>
+      <th>01_waiting_time</th>
+      <td>28.89</td>
+      <td>4.19</td>
+      <td>0.71</td>
+      <td>0.09</td>
+      <td>0.01</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <th>02_doctor_time</th>
+      <td>3.02</td>
+      <td>3.01</td>
+      <td>3.05</td>
+      <td>2.99</td>
+      <td>2.97</td>
+      <td>2.98</td>
+    </tr>
+    <tr>
+      <th>03_doctor_util</th>
+      <td>0.95</td>
+      <td>0.76</td>
+      <td>0.53</td>
+      <td>0.39</td>
+      <td>0.31</td>
+      <td>0.26</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ax</span> <span class="o">=</span> <span class="n">summary_frame</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;01_waiting_time&#39;</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s1">&#39;03_doctor_util&#39;</span><span class="p">,</span> 
+                          <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span><span class="mi">4</span><span class="p">),</span> <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;waiting time (hours)&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;doctor utilisation&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../../_images/02_ciw_30_0.png" src="../../../_images/02_ciw_30_0.png" />
+</div>
+</div>
+</div>
+</div>
 </div>
 
     <script type="text/x-thebe-config">
