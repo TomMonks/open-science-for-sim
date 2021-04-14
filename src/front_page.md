@@ -24,7 +24,9 @@ If you use this guide then we would appreciate a citation in your work.  Please 
 @software{open_science_sim,
   author       = {Thomas Monks and
                   Michael Allen and
-                  Simon Taylor},
+                  Simon Taylor and 
+                  Anastasia Anagnostou and
+                  Alison Harper},
   title        = {TomMonks/open-science-for-sim: v0.1.0},
   month        = mar,
   year         = 2021,
